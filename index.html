@@ -36,10 +36,16 @@
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
-        /* Lớp phủ chặn thao tác trên Youtube Player */
+        /* Lớp phủ chặn thao tác trên Youtube Player và ẩn trỏ chuột */
         #video-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; background: transparent; cursor: pointer;
+            z-index: 10; background: transparent; 
+            cursor: none; /* Ẩn hoàn toàn con trỏ chuột khi di chuột qua video */
+        }
+        
+        /* Đảm bảo iframe YouTube bên trong không bao giờ nhận được sự kiện chuột */
+        #video-wrapper iframe {
+            pointer-events: none !important;
         }
 
         .hidden-view { display: none !important; }
