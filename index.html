@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CroutEnglish | Nền tảng học Tiếng Anh Cao Cấp</title>
+    <title>CroutEnglish | Premium Online Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@246&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
-                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
-                        dark: { 800: '#1e293b', 900: '#0f172a' }
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+                        navy: { 800: '#0f172a', 900: '#020617' },
+                        accent: { 400: '#fbbf24', 500: '#f59e0b' }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(37, 99, 235, 0.5)',
+                        'soft': '0 20px 40px -15px rgba(0,0,0,0.05)',
+                        'premium': '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
                     }
                 }
             }
@@ -23,19 +29,22 @@
     </script>
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #F8FAFC;
-            color: #1e293b;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
             user-select: none; 
             -webkit-user-select: none;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
-        ::-webkit-scrollbar { width: 6px; }
+        /* Custom Premium Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* Video Lock Overlay */
         #video-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; background: transparent; cursor: none; 
@@ -43,84 +52,119 @@
         #video-wrapper iframe { pointer-events: none !important; }
 
         .hidden-view { display: none !important; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
+        /* Glassmorphism */
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); }
+        .glass-dark { background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* Auth Background */
         .auth-bg {
-            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=2070&auto=format&fit=crop');
             background-size: cover; background-position: center;
         }
 
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .glass-dark { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); }
+        /* Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
 
-        /* Animation cho modal */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+        /* MasterClass Style Card Hover */
+        .course-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .course-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); z-index: 10; }
+        .course-card .img-container img { transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .course-card:hover .img-container img { transform: scale(1.08); }
+        .course-card .hover-content { opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .course-card:hover .hover-content { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-navy-800">
 
-    <main id="view-auth" class="min-h-screen flex flex-col md:flex-row auth-bg relative">
-        <div class="absolute inset-0 bg-dark-900/60 backdrop-blur-sm z-0"></div>
+    <main id="view-auth" class="min-h-screen flex flex-col lg:flex-row auth-bg relative hidden-view">
+        <div class="absolute inset-0 bg-gradient-to-r from-navy-900/95 to-navy-900/50 backdrop-blur-[2px] z-0"></div>
         
-        <!-- Giới thiệu nền tảng (Bên trái) -->
-        <div class="relative z-10 w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center text-white">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-2xl">
-                <i data-lucide="graduation-cap" class="text-brand-600 w-10 h-10"></i>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Làm chủ Tiếng Anh<br><span class="text-brand-400">cùng Chuyên Gia</span></h1>
-            <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-lg font-light leading-relaxed">
-                Hệ thống học tập độc quyền được thiết kế chuẩn quốc tế. Cung cấp lộ trình cá nhân hóa, bài giảng chất lượng từ BBC và các chuyên gia hàng đầu.
-            </p>
-            <div class="flex items-center gap-6">
-                <div class="flex -space-x-4">
-                    <img class="w-12 h-12 rounded-full border-2 border-dark-900" src="https://i.pravatar.cc/100?img=1" alt="Student">
-                    <img class="w-12 h-12 rounded-full border-2 border-dark-900" src="https://i.pravatar.cc/100?img=2" alt="Student">
-                    <img class="w-12 h-12 rounded-full border-2 border-dark-900" src="https://i.pravatar.cc/100?img=3" alt="Student">
-                    <div class="w-12 h-12 rounded-full border-2 border-dark-900 bg-brand-600 flex items-center justify-center text-sm font-bold">+5k</div>
+        <!-- Branding Area -->
+        <div class="relative z-10 w-full lg:w-5/12 p-8 lg:p-20 flex flex-col justify-between text-white border-r border-white/10 glass-dark">
+            <div>
+                <div class="flex items-center gap-3 mb-16">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-glow">
+                        <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span class="font-extrabold text-2xl tracking-tight">Crout<span class="font-light">English</span></span>
                 </div>
-                <div class="text-sm">
-                    <p class="font-bold">Cộng đồng sôi động</p>
-                    <p class="text-gray-300">Đã tham gia học tập</p>
+                <h1 class="text-5xl lg:text-6xl font-extrabold mb-6 leading-[1.1] animate-fade-up">
+                    Elevate Your <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400">Fluency.</span>
+                </h1>
+                <p class="text-lg text-gray-300 mb-10 max-w-md font-light leading-relaxed animate-fade-up delay-100">
+                    Nền tảng học tập chuẩn Premium. Trải nghiệm phương pháp học chuyên sâu cùng các chuyên gia hàng đầu từ BBC và Youtube.
+                </p>
+            </div>
+            
+            <div class="animate-fade-up delay-200">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 rounded-full border-2 border-navy-900" src="https://i.pravatar.cc/100?img=1" alt="Student">
+                        <img class="w-10 h-10 rounded-full border-2 border-navy-900" src="https://i.pravatar.cc/100?img=2" alt="Student">
+                        <img class="w-10 h-10 rounded-full border-2 border-navy-900" src="https://i.pravatar.cc/100?img=3" alt="Student">
+                        <div class="w-10 h-10 rounded-full border-2 border-navy-900 bg-primary-600 flex items-center justify-center text-xs font-bold">+12k</div>
+                    </div>
+                    <div class="text-sm">
+                        <p class="text-white font-medium">Học viên toàn cầu</p>
+                    </div>
+                </div>
+                <div class="flex gap-1 text-accent-400">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Form đăng nhập (Bên phải) -->
-        <div class="relative z-10 w-full md:w-1/2 flex items-center justify-center p-6 md:p-0">
-            <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden w-full max-w-md p-8 border border-white/40">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Xin chào!</h2>
-                <p class="text-gray-500 mb-8 text-sm">Đăng nhập để tiếp tục hành trình của bạn.</p>
+        <!-- Form Area -->
+        <div class="relative z-10 w-full lg:w-7/12 flex items-center justify-center p-6 lg:p-12">
+            <div class="bg-white rounded-3xl shadow-premium overflow-hidden w-full max-w-lg p-10 animate-scale-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-navy-900 mb-2">Welcome Back</h2>
+                    <p class="text-gray-500 text-sm">Đăng nhập để tiếp tục lộ trình học tập của bạn.</p>
+                </div>
 
-                <div class="flex p-1 bg-gray-100/80 rounded-xl mb-8 backdrop-blur-md border border-gray-200">
-                    <button onclick="app.toggleAuthMode('login')" id="tab-login" class="flex-1 py-2.5 text-sm font-bold rounded-lg shadow-sm bg-white text-brand-600 transition-all">Đăng nhập</button>
-                    <button onclick="app.toggleAuthMode('register')" id="tab-register" class="flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 transition-all">Đăng ký mới</button>
+                <div class="flex p-1.5 bg-gray-100 rounded-xl mb-8">
+                    <button onclick="app.toggleAuthMode('login')" id="tab-login" class="flex-1 py-2.5 text-sm font-semibold rounded-lg shadow-sm bg-white text-primary-600 transition-all">Log In</button>
+                    <button onclick="app.toggleAuthMode('register')" id="tab-register" class="flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-navy-900 transition-all">Sign Up</button>
                 </div>
 
                 <form id="form-auth" onsubmit="app.handleAuth(event)" class="space-y-5">
                     <div id="field-name" class="hidden">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Họ và tên</label>
-                        <div class="relative">
-                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                            <input type="text" id="input-name" placeholder="Jay Sprout" class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm font-medium">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Họ và tên</label>
+                        <div class="relative group">
+                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-600 transition-colors"></i>
+                            <input type="text" id="input-name" placeholder="John Doe" class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm font-medium">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email học viên</label>
-                        <div class="relative">
-                            <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                            <input type="email" required placeholder="name@example.com" class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm font-medium">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Email Address</label>
+                        <div class="relative group">
+                            <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-600 transition-colors"></i>
+                            <input type="email" required placeholder="name@example.com" class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm font-medium">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Mật khẩu</label>
-                        <div class="relative">
-                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                            <input type="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm font-medium">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Password</label>
+                        <div class="relative group">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-600 transition-colors"></i>
+                            <input type="password" required placeholder="••••••••" class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm font-medium">
                         </div>
                     </div>
                     
-                    <button type="submit" id="btn-auth-submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2 mt-4">
+                    <button type="submit" id="btn-auth-submit" class="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary-500/30 transition-all flex justify-center items-center gap-2 mt-6">
                         Đăng nhập hệ thống <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </button>
                 </form>
@@ -128,40 +172,40 @@
         </div>
     </main>
 
-    <div id="view-app-layout" class="hidden-view flex h-screen overflow-hidden bg-gray-50">
+    <div id="view-app-layout" class="flex h-screen overflow-hidden bg-[#f4f7f6]">
         
         <!-- Sidebar Navigation -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex h-full shadow-sm z-20 relative">
-            <div class="h-20 flex items-center px-6 border-b border-gray-100">
-                <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
-                    <i data-lucide="graduation-cap" class="text-white w-4 h-4"></i>
+        <aside class="w-[280px] bg-white border-r border-gray-200 flex-col hidden lg:flex h-full z-20 relative shadow-soft">
+            <div class="h-24 flex items-center px-8 border-b border-gray-100">
+                <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center mr-3 shadow-glow">
+                    <i data-lucide="graduation-cap" class="text-white w-5 h-5"></i>
                 </div>
-                <span class="font-extrabold text-xl tracking-tight text-gray-900">Crout<span class="text-brand-600 font-light">English</span></span>
+                <span class="font-extrabold text-2xl tracking-tight text-navy-900">Crout<span class="font-light">English</span></span>
             </div>
             
-            <div class="flex-1 py-6 px-4 space-y-1 overflow-y-auto">
-                <p class="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menu chính</p>
-                <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold rounded-xl text-brand-600 bg-brand-50 transition-colors">
-                    <i data-lucide="layout-grid" class="w-5 h-5"></i> Khám phá
+            <div class="flex-1 py-8 px-5 space-y-2 overflow-y-auto">
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Menu</p>
+                <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-4 px-4 py-3.5 text-sm font-semibold rounded-xl text-primary-700 bg-primary-50 transition-all">
+                    <i data-lucide="compass" class="w-5 h-5"></i> Khám phá
                 </button>
-                <button onclick="app.navigate('mylearning')" id="nav-mylearning" class="w-full flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-                    <i data-lucide="book-open" class="w-5 h-5"></i> Lộ trình của tôi
+                <button onclick="app.navigate('mylearning')" id="nav-mylearning" class="w-full flex items-center gap-4 px-4 py-3.5 text-sm font-medium rounded-xl text-gray-500 hover:bg-gray-50 hover:text-navy-900 transition-all">
+                    <i data-lucide="play-square" class="w-5 h-5"></i> Lộ trình của tôi
                 </button>
-                <button onclick="app.navigate('profile')" id="nav-profile" class="w-full flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                <button onclick="app.navigate('profile')" id="nav-profile" class="w-full flex items-center gap-4 px-4 py-3.5 text-sm font-medium rounded-xl text-gray-500 hover:bg-gray-50 hover:text-navy-900 transition-all">
                     <i data-lucide="user" class="w-5 h-5"></i> Hồ sơ học viên
-                </button>
-                <button onclick="app.navigate('certificates')" id="nav-certificates" class="w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-                    <div class="flex items-center gap-3"><i data-lucide="award" class="w-5 h-5"></i> Chứng chỉ</div>
-                    <span class="bg-brand-100 text-brand-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Pro</span>
                 </button>
             </div>
 
-            <div class="p-4 border-t border-gray-100">
-                <div class="bg-dark-900 rounded-xl p-4 text-white relative overflow-hidden group">
-                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-brand-500 rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
-                    <h4 class="text-sm font-bold mb-1 relative z-10">Crout Premium</h4>
-                    <p class="text-xs text-gray-400 mb-3 relative z-10">Không giới hạn học tập</p>
-                    <button class="w-full bg-brand-600 hover:bg-brand-500 text-xs font-bold py-2 rounded-lg transition-colors relative z-10">Nâng cấp ngay</button>
+            <div class="p-5 border-t border-gray-100 bg-gray-50/50">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Premium+Student&background=0f172a&color=fff&rounded=true" alt="Avatar" class="w-12 h-12 rounded-full border border-gray-200">
+                    <div class="flex-1 overflow-hidden">
+                        <p class="text-sm font-bold text-navy-900 truncate">Học Viên Pro</p>
+                        <p class="text-xs text-primary-600 font-semibold truncate">Premium Member</p>
+                    </div>
+                    <button onclick="app.logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </button>
                 </div>
             </div>
         </aside>
@@ -170,258 +214,245 @@
         <div class="flex-1 flex flex-col h-full overflow-hidden relative">
             
             <!-- Top Header -->
-            <header class="h-20 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-6 z-10">
+            <header class="h-24 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex items-center justify-between px-6 lg:px-10 z-10 sticky top-0">
                 <div class="flex-1 flex items-center gap-4">
-                    <!-- Mobile Menu Btn -->
-                    <button class="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+                    <button class="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
-                    <!-- Global Search -->
-                    <div class="hidden sm:flex max-w-md w-full relative group">
-                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-brand-600 transition-colors"></i>
-                        <input type="text" id="global-search" placeholder="Tìm kiếm bài giảng, từ vựng..." 
-                            class="w-full bg-gray-100 border-2 border-transparent rounded-full py-2.5 pl-11 pr-4 text-sm font-medium focus:outline-none focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all placeholder-gray-400">
+                    <!-- Premium Search Bar -->
+                    <div class="hidden md:flex max-w-lg w-full relative group">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-600 transition-colors"></i>
+                        <input type="text" id="global-search" placeholder="Tìm kiếm bài giảng, giảng viên..." 
+                            class="w-full bg-gray-100/80 border border-transparent rounded-full py-3 pl-12 pr-4 text-sm font-medium focus:outline-none focus:bg-white focus:border-primary-500 focus:shadow-glow transition-all placeholder-gray-400">
                     </div>
                 </div>
 
-                <div class="flex items-center gap-4 sm:gap-6">
-                    <button class="relative p-2 text-gray-400 hover:text-gray-900 transition-colors">
-                        <i data-lucide="bell" class="w-6 h-6"></i>
-                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                <div class="flex items-center gap-5">
+                    <button class="relative p-2.5 text-gray-400 hover:text-navy-900 hover:bg-gray-100 rounded-full transition-all">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                     </button>
-                    <div class="h-8 w-px bg-gray-200 hidden sm:block"></div>
-                    <div class="flex items-center gap-3 cursor-pointer group">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-sm font-bold text-gray-900 leading-tight">Học Viên Pro</p>
-                            <p class="text-xs text-gray-500">Premium Member</p>
-                        </div>
-                        <img src="https://ui-avatars.com/api/?name=Student&background=2563eb&color=fff&rounded=true" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-gray-100 group-hover:border-brand-500 transition-all">
-                        <button onclick="app.logout()" class="ml-2 text-gray-400 hover:text-red-500 transition-colors" title="Đăng xuất">
-                            <i data-lucide="log-out" class="w-5 h-5"></i>
-                        </button>
-                    </div>
+                    <div class="h-8 w-px bg-gray-200"></div>
+                    <button class="flex items-center gap-2 bg-navy-900 hover:bg-navy-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-lg">
+                        <i data-lucide="zap" class="w-4 h-4 text-accent-400"></i> Nâng cấp
+                    </button>
                 </div>
             </header>
 
             <!-- Scrollable Pages Container -->
-            <main id="main-content" class="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50">
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 lg:p-10 pb-24">
                 
-                <div id="page-dashboard" class="max-w-7xl mx-auto space-y-8">
+                <div id="page-dashboard" class="max-w-[1400px] mx-auto space-y-12 animate-fade-in">
                     
-                    <!-- Stats / Welcome Row -->
-                    <div class="flex flex-col lg:flex-row gap-6">
-                        <!-- Welcome Banner -->
-                        <div class="bg-brand-600 rounded-3xl p-8 flex-1 text-white relative overflow-hidden shadow-lg shadow-brand-500/20">
-                            <div class="absolute right-0 bottom-0 opacity-20 transform translate-x-1/4 translate-y-1/4">
-                                <i data-lucide="book-open-check" class="w-64 h-64"></i>
+                    <!-- Hero Section / Featured Course -->
+                    <div class="relative bg-navy-900 rounded-[2.5rem] overflow-hidden shadow-premium flex flex-col lg:flex-row min-h-[360px] group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-navy-900 via-navy-900/90 to-transparent z-10 w-full lg:w-2/3"></div>
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay group-hover:scale-105 transition-transform duration-1000">
+                        
+                        <div class="relative z-20 w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                            <div class="flex items-center gap-2 mb-6">
+                                <span class="px-3 py-1 bg-accent-500/20 text-accent-400 border border-accent-500/30 text-xs font-bold uppercase tracking-widest rounded-full">Bài học nổi bật</span>
+                                <span class="text-gray-400 text-sm font-medium flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> 60 Phút</span>
                             </div>
-                            <div class="relative z-10">
-                                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-white/30">
-                                    Mục tiêu hôm nay
-                                </div>
-                                <h2 class="text-3xl font-extrabold mb-2">Chào mừng trở lại! 👋</h2>
-                                <p class="text-brand-100 mb-6 max-w-md">Bạn đã hoàn thành 70% lộ trình tuần này. Hãy tiếp tục học bài mới để nhận huy hiệu nhé.</p>
-                                <button onclick="document.getElementById('courses-section').scrollIntoView({behavior: 'smooth'})" class="bg-white text-brand-700 px-6 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-sm">
-                                    Tiếp tục học
+                            <h2 class="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">Mastering English <br>Pronunciation</h2>
+                            <p class="text-gray-300 text-lg mb-8 max-w-md line-clamp-2">Cải thiện phát âm và ngữ điệu chuẩn bản xứ thông qua phương pháp Shadowing chuyên sâu cùng các chuyên gia hàng đầu.</p>
+                            <div class="flex items-center gap-4">
+                                <button onclick="document.getElementById('courses-section').scrollIntoView({behavior: 'smooth'})" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-3.5 rounded-xl font-bold transition-colors shadow-glow flex items-center gap-2">
+                                    <i data-lucide="play" class="w-5 h-5 fill-current"></i> Học ngay
+                                </button>
+                                <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-3.5 rounded-xl font-bold transition-colors backdrop-blur-sm">
+                                    Xem chi tiết
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Mini Stats Cards -->
-                        <div class="grid grid-cols-2 gap-4 lg:w-1/3">
-                            <div class="bg-white rounded-3xl p-5 border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
-                                <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-3">
-                                    <i data-lucide="flame" class="w-6 h-6"></i>
-                                </div>
-                                <p class="text-3xl font-extrabold text-gray-900">5</p>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Ngày liên tiếp</p>
+                        <!-- User Stats Widget (Overlaying hero on large screens) -->
+                        <div class="relative z-20 lg:absolute lg:right-12 lg:top-1/2 lg:-translate-y-1/2 flex flex-row lg:flex-col gap-4 p-6 lg:p-0">
+                            <div class="glass-dark rounded-2xl p-5 w-full lg:w-48 text-center border border-white/10">
+                                <i data-lucide="flame" class="w-8 h-8 text-accent-400 mx-auto mb-2"></i>
+                                <p class="text-3xl font-extrabold text-white">12</p>
+                                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mt-1">Ngày liên tiếp</p>
                             </div>
-                            <div class="bg-white rounded-3xl p-5 border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
-                                <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center mb-3">
-                                    <i data-lucide="clock" class="w-6 h-6"></i>
-                                </div>
-                                <p class="text-3xl font-extrabold text-gray-900">12<span class="text-lg">h</span></p>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Đã học</p>
+                            <div class="glass-dark rounded-2xl p-5 w-full lg:w-48 text-center border border-white/10">
+                                <i data-lucide="target" class="w-8 h-8 text-primary-400 mx-auto mb-2"></i>
+                                <p class="text-3xl font-extrabold text-white">45<span class="text-lg">h</span></p>
+                                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mt-1">Đã hoàn thành</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Filter Section -->
-                    <div id="courses-section" class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 pb-4 mt-10">
-                        <h2 class="text-2xl font-extrabold text-gray-900">Thư viện Bài giảng</h2>
-                        <div class="flex space-x-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto">
-                            <button onclick="app.filterCourses('All')" class="filter-btn active px-4 py-2 bg-dark-900 text-white font-semibold text-sm rounded-full transition-all whitespace-nowrap">Tất cả</button>
-                            <button onclick="app.filterCourses('Beginner')" class="filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 transition-all whitespace-nowrap">Cơ bản</button>
-                            <button onclick="app.filterCourses('Intermediate')" class="filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 transition-all whitespace-nowrap">Trung cấp</button>
-                            <button onclick="app.filterCourses('Advanced')" class="filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 transition-all whitespace-nowrap">Nâng cao</button>
+                    <!-- Filter & Sort Section -->
+                    <div id="courses-section" class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-6">
+                        <div>
+                            <h3 class="text-2xl font-extrabold text-navy-900 mb-1">Thư viện Cao cấp</h3>
+                            <p class="text-gray-500 text-sm">Tuyển tập bài giảng từ các chuyên gia YouTube.</p>
+                        </div>
+                        
+                        <div class="flex space-x-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 hide-scrollbar">
+                            <button onclick="app.filterCourses('All')" class="filter-btn active px-6 py-2.5 bg-navy-900 text-white font-semibold text-sm rounded-full transition-all whitespace-nowrap shadow-md">Tất cả</button>
+                            <button onclick="app.filterCourses('Beginner')" class="filter-btn px-6 py-2.5 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap">Cơ bản</button>
+                            <button onclick="app.filterCourses('Intermediate')" class="filter-btn px-6 py-2.5 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap">Trung cấp</button>
+                            <button onclick="app.filterCourses('Advanced')" class="filter-btn px-6 py-2.5 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap">Nâng cao</button>
                         </div>
                     </div>
 
-                    <!-- Course Grid (Hiển thị thẻ full ảnh) -->
-                    <div id="course-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
-                        <!-- Nội dung động sinh ra từ JS -->
+                    <div id="course-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        <!-- Content rendered via JS -->
                     </div>
                 </div>
 
-                <div id="page-mylearning" class="hidden max-w-7xl mx-auto flex flex-col items-center justify-center py-20 text-center">
-                    <img src="https://illustrations.popsy.co/amber/student-going-to-school.svg" alt="Empty" class="w-64 h-64 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Lộ trình của bạn đang trống</h2>
-                    <p class="text-gray-500 mb-6">Hãy quay lại mục Khám phá và bắt đầu một bài học mới nhé!</p>
-                    <button onclick="app.navigate('dashboard')" class="bg-brand-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-brand-700 shadow-lg shadow-brand-500/30">Khám phá ngay</button>
+                <!-- Fake Pages for Navigation -->
+                <div id="page-mylearning" class="hidden max-w-4xl mx-auto py-20 text-center animate-fade-in">
+                    <div class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="book-dashed" class="w-16 h-16 text-gray-400"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-navy-900 mb-4">Lộ trình của bạn đang trống</h2>
+                    <p class="text-gray-500 text-lg mb-8 max-w-md mx-auto">Hãy bắt đầu hành trình bằng cách chọn một khóa học từ Thư viện Cao cấp.</p>
+                    <button onclick="app.navigate('dashboard')" class="bg-primary-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-primary-700 shadow-glow transition-all">Khám phá ngay</button>
+                </div>
+
+                <div id="page-profile" class="hidden max-w-4xl mx-auto py-20 text-center animate-fade-in">
+                    <h2 class="text-3xl font-extrabold text-navy-900 mb-4">Hồ sơ Học viên</h2>
+                    <p class="text-gray-500 text-lg">Tính năng đang được phát triển trong phiên bản Premium tiếp theo.</p>
                 </div>
             </main>
         </div>
     </div>
 
-    <div id="modal-course-detail" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-dark-900/60 backdrop-blur-sm" onclick="app.closeCourseDetail()"></div>
-        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[800px] bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-slide-up">
+    <div id="modal-course-detail" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-navy-900/80 backdrop-blur-sm" onclick="app.closeCourseDetail()"></div>
+        
+        <div class="relative w-full max-w-[1000px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] animate-scale-in z-10">
             
-            <!-- Banner khóa học -->
-            <div class="relative h-48 md:h-64 w-full bg-gray-900 shrink-0">
-                <img id="detail-cover" src="" alt="Cover" class="w-full h-full object-cover opacity-60">
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
-                <button onclick="app.closeCourseDetail()" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <div class="absolute bottom-4 left-6 right-6">
-                    <span id="detail-level" class="inline-block px-3 py-1 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-md mb-2">Trung cấp</span>
-                    <h2 id="detail-title" class="text-2xl md:text-3xl font-extrabold text-white leading-tight">Loading...</h2>
+            <!-- Modal Image Side -->
+            <div class="relative w-full md:w-5/12 h-64 md:h-auto bg-gray-900 shrink-0">
+                <img id="detail-cover" src="" alt="Cover" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/30 to-transparent"></div>
+                <div class="absolute top-4 left-4">
+                    <span id="detail-level" class="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider rounded-md border border-white/30">Level</span>
                 </div>
             </div>
 
-            <!-- Nội dung chi tiết -->
-            <div class="p-6 md:p-8 overflow-y-auto flex-1">
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Thông tin chính -->
-                    <div class="flex-1 space-y-6">
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Giới thiệu bài giảng</h3>
-                            <p class="text-gray-600 text-sm leading-relaxed">Đây là bài giảng độc quyền được tuyển chọn từ nguồn học liệu chất lượng cao của <strong id="detail-channel">Chuyên gia</strong>. Hệ thống yêu cầu bạn duy trì sự tập trung tuyệt đối (không chuyển tab) trong suốt 60 phút để đảm bảo hiệu quả tiếp thu.</p>
-                        </div>
-                        
-                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 flex items-center gap-4">
-                            <img id="detail-instructor-avatar" src="https://ui-avatars.com/api/?name=Teacher&background=0D8ABC&color=fff" class="w-14 h-14 rounded-full border-2 border-white shadow-sm">
+            <!-- Modal Content Side -->
+            <div class="w-full md:w-7/12 p-8 md:p-10 overflow-y-auto bg-white flex flex-col">
+                <button onclick="app.closeCourseDetail()" class="absolute top-6 right-6 p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors z-20">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="flex-1">
+                    <h2 id="detail-title" class="text-3xl font-extrabold text-navy-900 leading-tight mb-4 pr-8">Loading Title...</h2>
+                    
+                    <div class="flex items-center gap-6 mb-8 border-b border-gray-100 pb-6">
+                        <div class="flex items-center gap-3">
+                            <img id="detail-instructor-avatar" src="" class="w-12 h-12 rounded-full object-cover bg-gray-100">
                             <div>
-                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Giảng viên chính</p>
-                                <p id="detail-instructor-name" class="font-bold text-gray-900">Thầy / Cô giáo</p>
-                                <p class="text-xs text-brand-600 font-medium">Top Rated Instructor</p>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Giảng viên</p>
+                                <p id="detail-instructor-name" class="font-bold text-navy-900">Instructor Name</p>
                             </div>
                         </div>
-
+                        <div class="h-8 w-px bg-gray-200"></div>
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-3">Nội dung sẽ học</h3>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Lượt xem</p>
+                            <p id="detail-views" class="font-bold text-navy-900 flex items-center gap-1"><i data-lucide="eye" class="w-4 h-4 text-gray-400"></i> 0</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-navy-900 mb-2">Thông tin bài học</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Khóa học được tuyển chọn từ hệ thống giáo dục quốc tế. Để đảm bảo chất lượng, học viên yêu cầu học tập trung tối đa trong <strong>60 Phút</strong>. Mọi thao tác rời khỏi video sớm sẽ hủy bỏ kết quả học tập của phiên này.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-navy-900 mb-3">Mục tiêu đầu ra</h3>
                             <ul class="space-y-3">
-                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 shrink-0"></i> <span class="text-sm text-gray-600">Luyện nghe hiểu chuẩn bản xứ.</span></li>
-                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 shrink-0"></i> <span class="text-sm text-gray-600">Mở rộng 15-20 từ vựng và idioms mới.</span></li>
-                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 shrink-0"></i> <span class="text-sm text-gray-600">Phát triển phản xạ tự nhiên thông qua phương pháp shadowing.</span></li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary-500 shrink-0"></i> <span class="text-sm text-gray-600">Nâng cao kỹ năng Nghe - Hiểu thực tế.</span></li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary-500 shrink-0"></i> <span class="text-sm text-gray-600">Bổ sung từ vựng và cấu trúc ngữ pháp nâng cao.</span></li>
                             </ul>
                         </div>
                     </div>
-                    
-                    <!-- Thông số & Nút hành động -->
-                    <div class="w-full md:w-64 shrink-0 space-y-4">
-                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-100">
-                                <span class="text-sm text-gray-500 flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> Yêu cầu</span>
-                                <span class="font-bold text-gray-900">60 Phút</span>
-                            </div>
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-100">
-                                <span class="text-sm text-gray-500 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Lượt xem</span>
-                                <span id="detail-views" class="font-bold text-gray-900">0</span>
-                            </div>
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-100">
-                                <span class="text-sm text-gray-500 flex items-center gap-2"><i data-lucide="star" class="w-4 h-4 text-amber-500"></i> Đánh giá</span>
-                                <span class="font-bold text-gray-900">4.9/5</span>
-                            </div>
-                            
-                            <button id="btn-start-learning" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2">
-                                Vào học ngay <i data-lucide="play-circle" class="w-5 h-5"></i>
-                            </button>
-                            <p class="text-[10px] text-center text-gray-400 mt-2">* Lưu ý: Không thể thoát trước 60 phút.</p>
-                        </div>
-                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <button id="btn-start-learning" class="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-4 rounded-xl shadow-premium transition-all flex justify-center items-center gap-2 text-lg">
+                        Vào không gian học <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                    </button>
+                    <p class="text-xs text-center text-gray-400 mt-3 flex items-center justify-center gap-1"><i data-lucide="shield-check" class="w-4 h-4"></i> Secured Focus Mode (Bảo vệ 60 phút)</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <main id="view-learning" class="hidden-view h-screen bg-black flex flex-col relative z-[100]">
+    <main id="view-learning" class="hidden-view h-screen bg-black flex flex-col relative z-[100] font-sans">
         
-        <!-- Top Control Bar -->
-        <div class="glass-dark border-b border-gray-800 p-4 flex justify-between items-center z-20">
+        <!-- Top Cinematic Bar -->
+        <div class="absolute top-0 w-full p-6 flex justify-between items-center z-20 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500" id="learning-header">
             <div class="flex items-center gap-4">
-                <button onclick="app.tryExitCourse()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
-                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                <button onclick="app.tryExitCourse()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center text-white transition-all">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
                 </button>
                 <div>
-                    <span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 text-[10px] font-bold uppercase tracking-wider rounded border border-brand-500/30 mb-1 inline-block">Focus Mode</span>
-                    <h3 id="learning-title" class="text-white font-medium text-sm lg:text-base truncate max-w-md lg:max-w-xl">Loading...</h3>
+                    <span class="px-2 py-0.5 bg-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-widest rounded border border-red-500/30 mb-1 inline-block"><i class="w-2 h-2 inline-block bg-red-500 rounded-full mr-1 animate-pulse"></i>Focus Active</span>
+                    <h3 id="learning-title" class="text-white font-medium text-lg drop-shadow-md truncate max-w-xl">Loading...</h3>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3">
-                <button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                </button>
-                <button id="btn-exit-course" onclick="app.tryExitCourse()" class="px-5 py-2 bg-gray-800 text-gray-400 rounded-xl font-semibold text-sm cursor-not-allowed border border-gray-700 flex items-center gap-2">
-                    Thoát khóa học
-                </button>
-            </div>
+            <button id="btn-exit-course" onclick="app.tryExitCourse()" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md rounded-full font-semibold text-sm transition-all border border-white/10 flex items-center gap-2">
+                Thoát bài học
+            </button>
         </div>
 
-        <!-- Video Center Stage (Khóa tương tác) -->
-        <div class="flex-1 relative flex items-center justify-center bg-[#0a0a0a]">
-            <!-- Giữ kích thước siêu to khổng lồ -->
-            <div class="w-full h-full max-w-[1600px] max-h-[900px] relative" id="video-wrapper">
+        <!-- Video Center Stage -->
+        <div class="flex-1 relative flex items-center justify-center bg-black">
+            <div class="w-full h-full max-w-[1800px] max-h-[1000px] relative" id="video-wrapper">
                 <div id="yt-player" class="w-full h-full"></div>
-                <!-- Lớp phủ ma thuật: Khóa F12, khóa Click, giấu chuột -->
+                <!-- Magic Overlay: Chặn F12, Chuột, Click -->
                 <div id="video-overlay" onclick="app.togglePlayPause()"></div>
             </div>
         </div>
 
-        <!-- Bottom Play Controls & Progress -->
-        <div class="glass-dark border-t border-gray-800 p-4 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 z-20">
+        <!-- Bottom Premium Controls -->
+        <div class="absolute bottom-0 w-full p-8 flex flex-col md:flex-row justify-between items-end md:items-center gap-6 z-20 bg-gradient-to-t from-black via-black/80 to-transparent transition-opacity duration-500" id="learning-footer">
             
-            <div class="flex items-center gap-4">
-                <button id="btn-play-pause" onclick="app.togglePlayPause()" class="w-14 h-14 rounded-full bg-brand-600 hover:bg-brand-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 transition-all">
-                    <i data-lucide="play" id="icon-play-pause" class="w-6 h-6 ml-1"></i>
+            <div class="flex items-center gap-6">
+                <button id="btn-play-pause" onclick="app.togglePlayPause()" class="w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 flex items-center justify-center text-white shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all transform hover:scale-105">
+                    <i data-lucide="play" id="icon-play-pause" class="w-7 h-7 ml-1 fill-current"></i>
                 </button>
-                <div>
-                    <p class="text-white font-bold text-sm" id="learning-instructor">Instructor Name</p>
-                    <p class="text-gray-400 text-xs">Premium Lecture</p>
+                <div class="hidden sm:block">
+                    <p class="text-white font-bold text-base tracking-wide" id="learning-instructor">Instructor</p>
+                    <p class="text-gray-400 text-sm">CroutPremium™ Exclusive</p>
                 </div>
             </div>
 
-            <div class="flex items-center flex-1 max-w-2xl w-full gap-4">
-                <span class="text-xs text-gray-400 font-bold tracking-wider">TIẾN ĐỘ</span>
-                <div class="flex-1 bg-gray-800 h-3 rounded-full overflow-hidden border border-gray-700 shadow-inner">
-                    <div id="progress-bar" class="bg-gradient-to-r from-brand-600 to-brand-400 h-full w-0 transition-all duration-1000 relative">
-                        <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
+            <!-- Glowing Progress Bar -->
+            <div class="flex items-center flex-1 max-w-3xl w-full gap-5">
+                <div class="flex-1 bg-gray-800/80 h-2 rounded-full overflow-hidden backdrop-blur-md relative">
+                    <div id="progress-bar" class="bg-primary-500 h-full w-0 transition-all duration-1000 shadow-[0_0_15px_rgba(37,99,235,0.8)] relative">
+                        <div class="absolute right-0 top-0 bottom-0 w-4 bg-white/50 blur-[2px]"></div>
                     </div>
                 </div>
-                <div class="bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-inner">
-                    <i data-lucide="timer" class="w-4 h-4 text-brand-400"></i>
-                    <span class="text-white font-mono text-sm font-bold tracking-widest" id="timer-display">60:00</span>
+                <div class="bg-black/50 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center gap-2">
+                    <i data-lucide="timer" class="w-5 h-5 text-accent-400"></i>
+                    <span class="text-white font-mono text-base font-bold tracking-widest" id="timer-display">60:00</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal Cảnh báo Thoát sớm -->
-    <div id="warning-modal" class="fixed inset-0 bg-dark-900/90 z-[150] hidden flex items-center justify-center backdrop-blur-md">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full mx-4 border border-gray-100 transform scale-95 transition-transform duration-300" id="warning-box">
-            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 relative">
-                <div class="absolute inset-0 bg-red-100 rounded-full animate-ping opacity-50"></div>
-                <i data-lucide="shield-alert" class="text-red-600 w-10 h-10 relative z-10"></i>
+    <!-- Modal Cảnh báo (Thoát sớm) -->
+    <div id="warning-modal" class="fixed inset-0 bg-navy-900/95 z-[150] hidden flex items-center justify-center backdrop-blur-md">
+        <div class="bg-white rounded-3xl shadow-premium p-10 max-w-md w-full mx-4 border border-gray-100 transform scale-95 transition-transform duration-300 text-center" id="warning-box">
+            <div class="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                <div class="absolute inset-0 bg-red-100 rounded-full animate-ping opacity-60"></div>
+                <i data-lucide="alert-octagon" class="text-red-500 w-12 h-12 relative z-10"></i>
             </div>
-            <h3 class="text-2xl font-extrabold text-center text-gray-900 mb-2">Cảnh báo Học vụ!</h3>
-            <p class="text-center text-gray-600 text-sm mb-6 leading-relaxed">Hệ thống ghi nhận bạn chưa hoàn thành <strong>1 Tiếng</strong> học bắt buộc. Việc thoát bây giờ sẽ hủy bỏ toàn bộ kết quả của phiên học này.</p>
+            <h3 class="text-3xl font-extrabold text-navy-900 mb-3">Chưa hoàn thành!</h3>
+            <p class="text-gray-600 text-base mb-8 leading-relaxed">Bạn cần xem tập trung trong <strong>60 Phút</strong>. Việc thoát bây giờ sẽ <span class="text-red-500 font-bold">hủy bỏ toàn bộ</span> tiến trình học của phiên này.</p>
             <div class="space-y-3">
-                <button onclick="document.getElementById('warning-modal').classList.add('hidden'); if(!app.state.isPlaying) app.togglePlayPause();" class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 shadow-lg shadow-brand-500/30 transition-all">
+                <button onclick="document.getElementById('warning-modal').classList.add('hidden'); if(!app.state.isPlaying) app.togglePlayPause();" class="w-full bg-navy-900 text-white font-bold py-4 rounded-xl hover:bg-navy-800 shadow-lg transition-all text-lg">
                     Tiếp tục học ngay
                 </button>
-                <button onclick="app.forceExitCourse()" class="w-full bg-gray-100 text-gray-500 font-bold py-3.5 rounded-xl hover:bg-gray-200 hover:text-gray-900 transition-all">
+                <button onclick="app.forceExitCourse()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all">
                     Thoát và Hủy kết quả
                 </button>
             </div>
@@ -430,9 +461,9 @@
 
     <script>
         // CẤU HÌNH API
-        const YOUTUBE_API_KEY = "AIzaSyCWtu49sDuYu7drw01D5niFIS2xweT8XK4"; // ĐIỀN YOUTUBE DATA API V3 KEY VÀO ĐÂY
-        const SEARCH_KEYWORDS = "English Audio" ;
-        const REQUIRED_WATCH_TIME = 3600; // 3600 giây = 1 tiếng
+        const YOUTUBE_API_KEY = "AIzaSyCWtDf7JkyxX_2WL5HAVmWSKWDd9EI7zBQ"; // ĐIỀN YOUTUBE DATA API V3 KEY VÀO ĐÂY
+        const SEARCH_KEYWORDS = "Bob the Canadian English OR BBC Learning English"; 
+        const REQUIRED_WATCH_TIME = 3600; // 3600 giây = 60 phút
 
         // BẢO MẬT: Chống F12, Chuột phải
         document.addEventListener('contextmenu', event => event.preventDefault()); 
@@ -444,28 +475,23 @@
             if (e.ctrlKey && (e.key === "U" || e.keyCode === 85)) { e.preventDefault(); return false; }
         };
 
-        // KHO DỮ LIỆU DỰ PHÒNG KHỔNG LỒ (Chạy khi không có API Key)
+        // KHO DỮ LIỆU DỰ PHÒNG KHỔNG LỒ (Đảm bảo giao diện luôn Premium)
         let courseList = [
-            { id: "1", ytId: "x-X9i3i22aA", title: "Stop Translating in Your Head! Use THIS Method", level: "Advanced", views: "1.2M", duration: "10:20", thumb: "https://i.ytimg.com/vi/x-X9i3i22aA/maxresdefault.jpg", channel: "BBC Learning English" },
-            { id: "2", ytId: "_TTB8L_0VqQ", title: "How to Describe People in English - Masterclass", level: "Beginner", views: "850K", duration: "12:45", thumb: "https://i.ytimg.com/vi/_TTB8L_0VqQ/maxresdefault.jpg", channel: "Bob the Canadian" },
-            { id: "3", ytId: "hkJ_BCy4iF0", title: "Speak English Fearlessly with this One Question", level: "Intermediate", views: "2.1M", duration: "14:33", thumb: "https://i.ytimg.com/vi/hkJ_BCy4iF0/maxresdefault.jpg", channel: "BBC Learning English" },
-            { id: "4", ytId: "si78SV74NGk", title: "Shadowing Practice to Fix Your English Pronunciation", level: "Advanced", views: "54.8K", duration: "15:51", thumb: "https://i.ytimg.com/vi/si78SV74NGk/maxresdefault.jpg", channel: "Bob the Canadian" },
-            { id: "5", ytId: "1b9z_b0O4hM", title: "6 Minute English: Vocabulary & Everyday Practice", level: "Intermediate", views: "80.6K", duration: "06:15", thumb: "https://i.ytimg.com/vi/1b9z_b0O4hM/maxresdefault.jpg", channel: "BBC Learning English" },
+            { id: "1", ytId: "_TTB8L_0VqQ", title: "How to Describe People in English - Masterclass", level: "Beginner", views: "850K", duration: "12:45", thumb: "https://i.ytimg.com/vi/_TTB8L_0VqQ/maxresdefault.jpg", channel: "Bob the Canadian" },
+            { id: "2", ytId: "x-X9i3i22aA", title: "Stop Translating in Your Head! Use THIS Method", level: "Advanced", views: "1.2M", duration: "10:20", thumb: "https://i.ytimg.com/vi/x-X9i3i22aA/maxresdefault.jpg", channel: "BBC Learning English" },
+            { id: "3", ytId: "si78SV74NGk", title: "Shadowing Practice to Fix Your Pronunciation", level: "Intermediate", views: "54.8K", duration: "15:51", thumb: "https://i.ytimg.com/vi/si78SV74NGk/maxresdefault.jpg", channel: "Bob the Canadian" },
+            { id: "4", ytId: "hkJ_BCy4iF0", title: "Speak English Fearlessly with this One Question", level: "Advanced", views: "2.1M", duration: "14:33", thumb: "https://i.ytimg.com/vi/hkJ_BCy4iF0/maxresdefault.jpg", channel: "BBC Learning English" },
+            { id: "5", ytId: "1b9z_b0O4hM", title: "6 Minute English: Everyday Vocabulary Practice", level: "Intermediate", views: "80.6K", duration: "06:15", thumb: "https://i.ytimg.com/vi/1b9z_b0O4hM/maxresdefault.jpg", channel: "BBC Learning English" },
             { id: "6", ytId: "L_w-3QnB55M", title: "Learn English at the Grocery Store - Real Life", level: "Beginner", views: "150K", duration: "14:20", thumb: "https://i.ytimg.com/vi/L_w-3QnB55M/maxresdefault.jpg", channel: "Bob the Canadian" },
             { id: "7", ytId: "5aPkddzAT4A", title: "The RIGHT way to become fluent in ENGLISH", level: "Advanced", views: "90K", duration: "12:13", thumb: "https://i.ytimg.com/vi/5aPkddzAT4A/maxresdefault.jpg", channel: "BBC Learning English" },
-            { id: "8", ytId: "jNr_6eINleM", title: "3 English Speaking Exercises (zero friends needed)", level: "Intermediate", views: "311K", duration: "16:16", thumb: "https://i.ytimg.com/vi/jNr_6eINleM/maxresdefault.jpg", channel: "Bob the Canadian" },
-            // Sinh thêm dữ liệu ảo để lấp đầy giao diện
-            { id: "9", ytId: "ofp_EMDu2GU", title: "If You Want to be Fluent... Dream in English", level: "Beginner", views: "81K", duration: "11:40", thumb: "https://i.ytimg.com/vi/ofp_EMDu2GU/maxresdefault.jpg", channel: "BBC Learning English" },
-            { id: "10", ytId: "x-X9i3i22aA", title: "Business English: Formal vs Informal Talk", level: "Advanced", views: "420K", duration: "18:00", thumb: "https://i.ytimg.com/vi/x-X9i3i22aA/maxresdefault.jpg", channel: "Bob the Canadian" },
-            { id: "11", ytId: "_TTB8L_0VqQ", title: "Common Mistakes in English Grammar You Must Avoid", level: "Intermediate", views: "1.5M", duration: "22:10", thumb: "https://i.ytimg.com/vi/_TTB8L_0VqQ/maxresdefault.jpg", channel: "BBC Learning English" },
-            { id: "12", ytId: "L_w-3QnB55M", title: "English Listening Practice: Fast Speech", level: "Advanced", views: "980K", duration: "15:30", thumb: "https://i.ytimg.com/vi/L_w-3QnB55M/maxresdefault.jpg", channel: "Bob the Canadian" }
+            { id: "8", ytId: "jNr_6eINleM", title: "3 English Speaking Exercises (zero friends needed)", level: "Intermediate", views: "311K", duration: "16:16", thumb: "https://i.ytimg.com/vi/jNr_6eINleM/maxresdefault.jpg", channel: "Bob the Canadian" }
         ];
 
         const app = {
             state: {
                 isLoggedIn: false,
-                currentView: 'auth', // 'auth', 'app-layout', 'learning'
-                currentPage: 'dashboard', // 'dashboard', 'mylearning', 'profile', 'certificates'
+                currentView: 'auth',
+                currentPage: 'dashboard',
                 activeCourse: null,
                 watchTime: 0,
                 timerInterval: null,
@@ -481,18 +507,31 @@
                 this.fetchYoutubeVideos(); 
                 this.renderView();
                 
-                // Gắn sự kiện tìm kiếm
                 document.getElementById('global-search').addEventListener('input', (e) => {
                     this.state.searchQuery = e.target.value;
                     if(this.state.currentPage === 'dashboard') this.renderCourses();
                 });
+
+                // Tự động ẩn hiện thanh control khi đang xem video
+                let timeout;
+                document.getElementById('view-learning').addEventListener('mousemove', () => {
+                    if(!this.state.isPlaying) return;
+                    document.getElementById('learning-header').style.opacity = '1';
+                    document.getElementById('learning-footer').style.opacity = '1';
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if(this.state.isPlaying) {
+                            document.getElementById('learning-header').style.opacity = '0';
+                            document.getElementById('learning-footer').style.opacity = '0';
+                        }
+                    }, 3000);
+                });
             },
 
-            // --- ĐIỀU HƯỚNG VIEW LỚN ---
             renderView() {
-                document.getElementById('view-auth').classList.add('hidden-view');
-                document.getElementById('view-app-layout').classList.add('hidden-view');
-                document.getElementById('view-learning').classList.add('hidden-view');
+                ['view-auth', 'view-app-layout', 'view-learning'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden-view');
+                });
 
                 if (!this.state.isLoggedIn) {
                     document.getElementById('view-auth').classList.remove('hidden-view');
@@ -504,55 +543,43 @@
                 }
             },
 
-            // --- ĐIỀU HƯỚNG TRANG CON (SIDEBAR) ---
             navigate(page) {
                 this.state.currentPage = page;
                 
-                // Ẩn tất cả page
-                ['dashboard', 'mylearning'].forEach(p => {
+                ['dashboard', 'mylearning', 'profile'].forEach(p => {
                     const el = document.getElementById(`page-${p}`);
                     if(el) el.classList.add('hidden');
                 });
                 
-                // Mặc định những trang chưa code html (như profile, cert) sẽ trỏ về màn hình MyLearning giả lập
-                const targetPage = document.getElementById(`page-${page}`) ? page : 'mylearning';
-                document.getElementById(`page-${targetPage}`).classList.remove('hidden');
+                document.getElementById(`page-${page}`).classList.remove('hidden');
 
-                // Cập nhật UI menu
-                ['dashboard', 'mylearning', 'profile', 'certificates'].forEach(p => {
+                ['dashboard', 'mylearning', 'profile'].forEach(p => {
                     const btn = document.getElementById(`nav-${p}`);
                     if(btn) {
-                        btn.className = "w-full flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors";
-                        if(p === 'certificates') {
-                             btn.className = "w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors";
+                        if(p === page) {
+                            btn.className = "w-full flex items-center gap-4 px-4 py-3.5 text-sm font-bold rounded-xl text-primary-700 bg-primary-50 transition-all";
+                        } else {
+                            btn.className = "w-full flex items-center gap-4 px-4 py-3.5 text-sm font-medium rounded-xl text-gray-500 hover:bg-gray-50 hover:text-navy-900 transition-all";
                         }
                     }
                 });
-                
-                const activeBtn = document.getElementById(`nav-${page}`);
-                if(activeBtn) {
-                    if(page !== 'certificates') {
-                        activeBtn.className = "w-full flex items-center gap-3 px-3 py-3 text-sm font-bold rounded-xl text-brand-700 bg-brand-100 transition-colors";
-                    }
-                }
 
                 if(page === 'dashboard') this.renderCourses();
             },
 
-            // --- XÁC THỰC ---
             toggleAuthMode(mode) {
                 const isLogin = mode === 'login';
                 document.getElementById('tab-login').className = isLogin 
-                    ? "flex-1 py-2.5 text-sm font-bold rounded-lg shadow-sm bg-white text-brand-600 transition-all"
-                    : "flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 transition-all";
+                    ? "flex-1 py-2.5 text-sm font-semibold rounded-lg shadow-sm bg-white text-primary-600 transition-all"
+                    : "flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-navy-900 transition-all";
                 document.getElementById('tab-register').className = isLogin 
-                    ? "flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 transition-all"
-                    : "flex-1 py-2.5 text-sm font-bold rounded-lg shadow-sm bg-white text-brand-600 transition-all";
+                    ? "flex-1 py-2.5 text-sm font-medium rounded-lg text-gray-500 hover:text-navy-900 transition-all"
+                    : "flex-1 py-2.5 text-sm font-semibold rounded-lg shadow-sm bg-white text-primary-600 transition-all";
                 
                 document.getElementById('field-name').style.display = isLogin ? 'none' : 'block';
                 document.getElementById('btn-auth-submit').innerHTML = isLogin 
                     ? 'Đăng nhập hệ thống <i data-lucide="arrow-right" class="w-5 h-5"></i>' 
-                    : 'Tạo tài khoản Pro <i data-lucide="sparkles" class="w-5 h-5"></i>';
+                    : 'Tạo tài khoản Premium <i data-lucide="zap" class="w-5 h-5"></i>';
                 lucide.createIcons();
             },
 
@@ -571,16 +598,15 @@
                 this.renderView();
             },
 
-            // --- DANH SÁCH & BỘ LỌC ---
             filterCourses(level) {
                 this.state.currentFilter = level;
                 document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.className = "filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 transition-all whitespace-nowrap";
+                    btn.className = "filter-btn px-6 py-2.5 bg-white text-gray-600 border border-gray-200 font-semibold text-sm rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap";
                 });
                 const activeText = level === 'All' ? 'Tất cả' : (level === 'Beginner' ? 'Cơ bản' : (level === 'Intermediate' ? 'Trung cấp' : 'Nâng cao'));
                 const clickedBtn = Array.from(document.querySelectorAll('.filter-btn')).find(b => b.innerText.includes(activeText));
                 if(clickedBtn) {
-                    clickedBtn.className = "filter-btn active px-4 py-2 bg-dark-900 text-white font-semibold text-sm rounded-full transition-all whitespace-nowrap shadow-md";
+                    clickedBtn.className = "filter-btn active px-6 py-2.5 bg-navy-900 text-white font-semibold text-sm rounded-full transition-all whitespace-nowrap shadow-md";
                 }
                 this.renderCourses();
             },
@@ -591,58 +617,53 @@
                 grid.innerHTML = '';
                 
                 let filtered = courseList.filter(c => {
-                    const matchSearch = c.title.toLowerCase().includes(this.state.searchQuery.toLowerCase());
+                    const matchSearch = c.title.toLowerCase().includes(this.state.searchQuery.toLowerCase()) || c.channel.toLowerCase().includes(this.state.searchQuery.toLowerCase());
                     const matchFilter = this.state.currentFilter === 'All' || c.level === this.state.currentFilter;
                     return matchSearch && matchFilter;
                 });
 
                 if(filtered.length === 0) {
                     grid.innerHTML = `<div class="col-span-full py-20 text-center text-gray-500 flex flex-col items-center">
-                        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <i data-lucide="search-x" class="w-10 h-10 text-gray-400"></i>
-                        </div>
-                        <span class="font-semibold text-lg">Không tìm thấy bài giảng</span>
-                        <p class="text-sm">Vui lòng thử từ khóa khác hoặc đổi bộ lọc.</p>
+                        <i data-lucide="search-x" class="w-16 h-16 text-gray-300 mb-4"></i>
+                        <span class="font-bold text-xl text-navy-900">Không tìm thấy bài giảng</span>
+                        <p class="text-sm mt-2">Vui lòng thử từ khóa khác hoặc đổi bộ lọc.</p>
                     </div>`;
                     lucide.createIcons(); return;
                 }
 
-                filtered.forEach(course => {
-                    let levelLabel = course.level === "Advanced" ? "Nâng cao" : (course.level === "Intermediate" ? "Trung cấp" : "Cơ bản");
-                    let badgeColor = course.level === "Advanced" ? "bg-red-500" : (course.level === "Intermediate" ? "bg-amber-500" : "bg-green-500");
+                filtered.forEach((course, index) => {
+                    let levelColor = course.level === "Advanced" ? "bg-red-500" : (course.level === "Intermediate" ? "bg-accent-500" : "bg-green-500");
+                    let delay = (index % 4) * 100;
 
                     const card = document.createElement('div');
                     card.onclick = () => app.openCourseDetail(course.id);
-                    // Design dạng Card Full Ảnh (Background Image thẻ)
-                    card.className = "relative h-[380px] rounded-3xl overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 group border border-gray-100";
+                    card.className = `course-card relative rounded-3xl overflow-hidden cursor-pointer bg-navy-900 border border-gray-200 shadow-sm aspect-[4/5] animate-fade-up`;
+                    card.style.animationDelay = `${delay}ms`;
+                    
                     card.innerHTML = `
-                        <img src="${course.thumb}" alt="Cover" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <!-- Gradient Overlay mượt mà -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="img-container absolute inset-0 w-full h-full">
+                            <img src="${course.thumb}" alt="Cover" class="w-full h-full object-cover opacity-90">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/60 to-transparent"></div>
                         
-                        <div class="absolute inset-0 p-6 flex flex-col justify-between">
-                            <div class="flex justify-between items-start z-10">
-                                <span class="px-3 py-1.5 ${badgeColor} text-white text-[10px] font-bold uppercase tracking-wider rounded-lg shadow-sm">${levelLabel}</span>
-                                <div class="bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-white/10">
+                        <div class="absolute inset-0 p-6 flex flex-col justify-between z-10">
+                            <div class="flex justify-between items-start">
+                                <span class="px-3 py-1 ${levelColor} text-white text-[10px] font-bold uppercase tracking-widest rounded shadow-md">${course.level}</span>
+                                <div class="bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-white/20">
                                     <i data-lucide="clock" class="w-3.5 h-3.5 text-white"></i>
                                     <span class="text-xs font-bold text-white">${course.duration}</span>
                                 </div>
                             </div>
                             
-                            <div class="flex flex-col z-10 transform translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                                <h3 class="font-extrabold text-white text-xl mb-3 line-clamp-2 leading-snug drop-shadow-lg">${course.title}</h3>
+                            <div>
+                                <h3 class="font-extrabold text-white text-xl mb-2 line-clamp-3 leading-snug drop-shadow-md">${course.title}</h3>
+                                <p class="text-gray-300 text-sm font-medium mb-4 flex items-center gap-2"><i data-lucide="user-square" class="w-4 h-4"></i> ${course.channel}</p>
                                 
-                                <div class="flex items-center gap-3 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                                    <img src="https://ui-avatars.com/api/?name=${course.channel}&background=random&color=fff" class="w-8 h-8 rounded-full border border-white/30">
-                                    <div class="text-xs text-gray-300">
-                                        <p class="font-bold text-white">${course.channel}</p>
-                                        <p>${course.views} học viên</p>
-                                    </div>
+                                <div class="hover-content h-0 overflow-hidden">
+                                    <button class="w-full bg-white text-navy-900 font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors">
+                                        Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
                                 </div>
-
-                                <button class="w-full bg-white text-brand-700 font-bold py-3.5 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-2 hover:bg-brand-50">
-                                    Xem chi tiết <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                                </button>
                             </div>
                         </div>
                     `;
@@ -651,36 +672,32 @@
                 lucide.createIcons();
             },
 
-            // --- MODAL CHI TIẾT KHÓA HỌC ---
             openCourseDetail(courseId) {
                 const course = courseList.find(c => c.id === courseId);
                 if(!course) return;
-                
                 this.state.activeCourse = course;
                 
-                // Đổ dữ liệu vào modal
                 document.getElementById('detail-cover').src = course.thumb;
                 document.getElementById('detail-title').innerText = course.title;
-                document.getElementById('detail-channel').innerText = course.channel;
                 document.getElementById('detail-instructor-name').innerText = course.channel;
-                document.getElementById('detail-views').innerText = course.views;
+                document.getElementById('detail-views').innerHTML = `<i data-lucide="eye" class="w-4 h-4 text-gray-400"></i> ${course.views}`;
                 
-                let levelLabel = course.level === "Advanced" ? "Nâng cao" : (course.level === "Intermediate" ? "Trung cấp" : "Cơ bản");
-                document.getElementById('detail-level').innerText = levelLabel;
-                document.getElementById('detail-instructor-avatar').src = `https://ui-avatars.com/api/?name=${course.channel}&background=random&color=fff`;
-
-                // Gán sự kiện nút Play
+                let levelColor = course.level === "Advanced" ? "bg-red-500" : (course.level === "Intermediate" ? "bg-accent-500" : "bg-green-500");
+                const levelBadge = document.getElementById('detail-level');
+                levelBadge.innerText = course.level;
+                levelBadge.className = `px-3 py-1 ${levelColor} text-white text-[10px] font-bold uppercase tracking-widest rounded shadow-md`;
+                
+                document.getElementById('detail-instructor-avatar').src = `https://ui-avatars.com/api/?name=${course.channel}&background=0f172a&color=fff`;
                 document.getElementById('btn-start-learning').onclick = () => this.startLearningSpace();
 
                 document.getElementById('modal-course-detail').classList.remove('hidden');
+                lucide.createIcons();
             },
 
             closeCourseDetail() {
                 document.getElementById('modal-course-detail').classList.add('hidden');
-                document.getElementById('modal-course-detail').querySelector('.animate-slide-up').classList.add('animate-slide-up');
             },
 
-            // --- KHÔNG GIAN HỌC TẬP ---
             startLearningSpace() {
                 this.closeCourseDetail();
                 const course = this.state.activeCourse;
@@ -689,20 +706,21 @@
                 this.state.watchTime = 0;
                 this.state.isPlaying = false;
                 
-                // Update UI Learning
                 document.getElementById('learning-title').innerText = course.title;
                 document.getElementById('learning-instructor').innerText = course.channel;
                 
-                // Reset UI trạng thái thoát khóa học
                 this.updateTimerDisplay();
                 const exitBtn = document.getElementById('btn-exit-course');
-                exitBtn.className = "px-5 py-2 bg-gray-800 text-gray-400 rounded-xl font-semibold text-sm cursor-not-allowed border border-gray-700 flex items-center gap-2";
-                exitBtn.innerHTML = 'Thoát khóa học';
+                exitBtn.className = "px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md rounded-full font-semibold text-sm transition-all border border-white/10 flex items-center gap-2";
+                exitBtn.innerHTML = 'Thoát bài học';
 
                 this.state.currentView = 'learning';
                 this.renderView();
-                lucide.createIcons();
                 
+                // Show controls initially
+                document.getElementById('learning-header').style.opacity = '1';
+                document.getElementById('learning-footer').style.opacity = '1';
+
                 if (this.state.playerReady && this.player) {
                     this.player.loadVideoById(course.ytId);
                 }
@@ -716,21 +734,23 @@
 
             updatePlayState(isPlaying) {
                 this.state.isPlaying = isPlaying;
-                const iconContainer = document.getElementById('icon-play-pause').parentNode;
                 const btn = document.getElementById('btn-play-pause');
                 
                 if(isPlaying) {
-                    iconContainer.innerHTML = '<i data-lucide="pause" id="icon-play-pause" class="w-6 h-6"></i>';
-                    btn.classList.replace('bg-brand-600', 'bg-amber-500');
-                    btn.classList.replace('hover:bg-brand-500', 'hover:bg-amber-400');
-                    btn.classList.replace('shadow-brand-500/30', 'shadow-amber-500/30');
+                    btn.innerHTML = '<i data-lucide="pause" class="w-7 h-7 fill-current"></i>';
+                    btn.classList.replace('bg-primary-600', 'bg-accent-500');
+                    btn.classList.replace('hover:bg-primary-500', 'hover:bg-accent-400');
+                    btn.classList.replace('shadow-[0_0_30px_rgba(37,99,235,0.6)]', 'shadow-[0_0_30px_rgba(245,158,11,0.6)]');
                     this.startTimer();
                 } else {
-                    iconContainer.innerHTML = '<i data-lucide="play" id="icon-play-pause" class="w-6 h-6 ml-1"></i>';
-                    btn.classList.replace('bg-amber-500', 'bg-brand-600');
-                    btn.classList.replace('hover:bg-amber-400', 'hover:bg-brand-500');
-                    btn.classList.replace('shadow-amber-500/30', 'shadow-brand-500/30');
+                    btn.innerHTML = '<i data-lucide="play" class="w-7 h-7 ml-1 fill-current"></i>';
+                    btn.classList.replace('bg-accent-500', 'bg-primary-600');
+                    btn.classList.replace('hover:bg-accent-400', 'hover:bg-primary-500');
+                    btn.classList.replace('shadow-[0_0_30px_rgba(245,158,11,0.6)]', 'shadow-[0_0_30px_rgba(37,99,235,0.6)]');
                     this.stopTimer();
+                    // Show controls when paused
+                    document.getElementById('learning-header').style.opacity = '1';
+                    document.getElementById('learning-footer').style.opacity = '1';
                 }
                 lucide.createIcons();
             },
@@ -766,18 +786,19 @@
 
             unlockCourse() {
                 const exitBtn = document.getElementById('btn-exit-course');
-                exitBtn.className = "px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold text-sm cursor-pointer shadow-lg shadow-green-500/30 transition-all flex items-center gap-2";
-                exitBtn.innerHTML = 'Hoàn thành bài học <i data-lucide="check-circle" class="w-5 h-5"></i>';
+                exitBtn.className = "px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(34,197,94,0.5)] transition-all flex items-center gap-2 cursor-pointer";
+                exitBtn.innerHTML = 'Hoàn thành bài học <i data-lucide="check-circle" class="w-4 h-4"></i>';
                 lucide.createIcons();
             },
 
             tryExitCourse() {
                 if (this.state.watchTime < REQUIRED_WATCH_TIME) {
                     document.getElementById('warning-modal').classList.remove('hidden');
-                    // Add animation pop
                     const box = document.getElementById('warning-box');
                     box.classList.remove('scale-95'); box.classList.add('scale-100');
                     if(this.state.isPlaying && this.player) this.player.pauseVideo();
+                    document.getElementById('learning-header').style.opacity = '1';
+                    document.getElementById('learning-footer').style.opacity = '1';
                 } else {
                     this.forceExitCourse();
                 }
@@ -791,7 +812,6 @@
                 this.renderView();
             },
 
-            // --- YOUTUBE API ---
             formatViews(viewCount) {
                 if (!viewCount) return "0";
                 if (viewCount >= 1000000) return (viewCount / 1000000).toFixed(1) + 'M';
@@ -800,17 +820,14 @@
             },
 
             async fetchYoutubeVideos() {
-                if (!YOUTUBE_API_KEY || YOUTUBE_API_KEY === "AIzaSyCWtDf7JkyxX_2WL5HAVmWSKWDd9EI7zBQ") {
-                    console.log("CẢNH BÁO: Chưa có API Key thật. Hệ thống sử dụng 12 video dự phòng chất lượng cao.");
-                    return; 
-                }
+                if (!YOUTUBE_API_KEY || YOUTUBE_API_KEY === "AIzaSyCWtDf7JkyxX_2WL5HAVmWSKWDd9EI7zBQ") return;
 
                 try {
                     const searchQuery = encodeURIComponent(SEARCH_KEYWORDS);
                     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${searchQuery}&type=video&maxResults=50&key=${YOUTUBE_API_KEY}`;
                     
                     const searchRes = await fetch(searchUrl);
-                    if (!searchRes.ok) throw new Error("Lỗi API Search");
+                    if (!searchRes.ok) throw new Error("Search API Failed");
                     const searchData = await searchRes.json();
                     
                     if (!searchData.items || searchData.items.length === 0) return;
@@ -819,7 +836,7 @@
                     const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoIds}&key=${YOUTUBE_API_KEY}`;
                     
                     const detailsRes = await fetch(detailsUrl);
-                    if (!detailsRes.ok) throw new Error("Lỗi API Chi tiết Video");
+                    if (!detailsRes.ok) throw new Error("Details API Failed");
                     const detailsData = await detailsRes.json();
 
                     const levels = ["Beginner", "Intermediate", "Advanced"];
@@ -846,7 +863,7 @@
             }
         };
 
-        // --- YOUTUBE IFRAME INIT ---
+        // YOUTUBE IFRAME INIT
         function onYouTubeIframeAPIReady() {
             app.player = new YT.Player('yt-player', {
                 height: '100%', width: '100%', videoId: 'ofp_EMDu2GU', 
